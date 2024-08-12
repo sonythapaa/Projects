@@ -1,0 +1,516 @@
+{
+	"info": {
+		"_postman_id": "97503496-8356-4d27-b628-6d64c050c325",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31827331"
+	},
+	"item": [
+		{
+			"name": "Valid",
+			"item": [
+				{
+					"name": "Register_valid_details Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"fname\",pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+									"pm.environment.set(\"lname\",pm.variables.replaceIn('{{$randomLastName}}'));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var reqBody = JSON.parse(request.data);\r",
+									"console.log(reqBody)\r",
+									"pm.environment.set(\"email\",reqBody.email);\r",
+									"pm.environment.set(\"password\",reqBody.password);\r",
+									"\r",
+									"\r",
+									"pm.environment.set(\"FIRSTNAME\", reqBody.first_name);\r",
+									"pm.environment.unset(\"FIRSTNAME\");\r",
+									"\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"first_name\": \"{{fname}}\",\r\n  \"last_name\": \"{{lname}}\",\r\n  \"email\": \"{{fname}}@gmail.com\",\r\n  \"password\": \"admina\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASEURL}}/api/auth/register",
+							"host": [
+								"{{BASEURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login_Valid_Details Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsondata = JSON.parse(responseBody);\r",
+									"console.log(jsondata)\r",
+									"pm.environment.set(\"token\",jsondata.access_token);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"test\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.token_type).to.eql(\"Bearer\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"client_id\": \"NDSFQOLVNN8dd5343cc82721e2038a\",\r\n  \"grant_type\": \"password\",\r\n  \"client_secret\": \"HRMDODNKWAIFJHGMPUAITPPMOLJXVPTPAECDLJYUEETUFQDULNAJVQLCSGLIEWRJ9db7e00cbb4077eaa622\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASEURL}}/api/auth/login",
+							"host": [
+								"{{BASEURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getprofile_authorized Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = JSON.parse(responseBody);\r",
+									"console.log(data)\r",
+									"pm.environment.set(\"ID\", data.data.id);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASEURL}}/api/v1/profile",
+							"host": [
+								"{{BASEURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change password successful Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var reqBody = JSON.parse(request.data);\r",
+									"console.log(reqBody)\r",
+									"//pm.environment.set(\"email\",reqBody.email);\r",
+									"pm.environment.set(\"password\",reqBody.new_password);\r",
+									"\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.test(\"Response body contains Password updated successfully\", function () {\r",
+									"\r",
+									"    pm.expect(jsonData.data.message).to.include(\"Password updated successfully\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"old_password\" : \"{{password}}\",\r\n    \"new_password\" : \"admin678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASEURL}}/api/v1/change-password",
+							"host": [
+								"{{BASEURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Email_Successful Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var reqBody = JSON.parse(request.data);\r",
+									"console.log(reqBody)\r",
+									"pm.environment.set(\"email\",reqBody.email);\r",
+									"//pm.environment.set(\"password\",reqBody.password);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"fname\",pm.variables.replaceIn('{{$randomFirstName}}'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"old_email\":\"{{email}}\",\r\n    \"email\":\"{{fname}}@gmail.com\",\r\n    \"password\":\"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASEURL}}/api/v1/change-email",
+							"host": [
+								"{{BASEURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"change-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile_Successful Copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"fname\",pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+									"pm.environment.set(\"lname\",pm.variables.replaceIn('{{$randomLastName}}'));\r",
+									"pm.environment.set(\"phone no\",Math.floor(Math.random()*9999999999));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\":\"{{fname}}\",\r\n    \"last_name\":\"{{lname}}\",\r\n    \"contactNumber\":\"{{phone no}}\",\r\n    \"goal\":31,\r\n    \"about\":\"introduction\",\r\n    \"location\":\"pokharaa\",\r\n    \"reminder_status\":true,\r\n    \"reminder_time\":\"12am\",\r\n    \"reminder_message\":\"defg\",\r\n    \"user_feelings\":[1,2],\r\n    \"nickname\":\"nickyy\",\r\n    \"dob\":\"3/23/1998\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASEURL}}/api/v1/profile",
+							"host": [
+								"{{BASEURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login_Valid_Details Copy 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsondata = JSON.parse(responseBody);\r",
+									"console.log(jsondata)\r",
+									"pm.environment.set(\"token\",jsondata.access_token);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"test\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.token_type).to.eql(\"Bearer\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\",\r\n  \"client_id\": \"NDSFQOLVNN8dd5343cc82721e2038a\",\r\n  \"grant_type\": \"password\",\r\n  \"client_secret\": \"HRMDODNKWAIFJHGMPUAITPPMOLJXVPTPAECDLJYUEETUFQDULNAJVQLCSGLIEWRJ9db7e00cbb4077eaa622\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASEURL}}/api/auth/login",
+							"host": [
+								"{{BASEURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout Successful Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "api-key",
+								"value": "{{API-KEY}}",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASEURL}}/api/v1/logout",
+							"host": [
+								"{{BASEURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
